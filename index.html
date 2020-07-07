@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover"
+    />
+    <meta
+      name="Description"
+      content="Website for embedding a Livery player within an iframe."
+    />
+    <base href="/" />
+
+    <title>Livery Iframe</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+        -webkit-box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        color: white;
+        font-family: 'Open Sans', sans-serif;
+        line-height: 1.25em;
+        font-size: 14px;
+      }
+
+      a, a:link, a:visited, a:focus, a:hover, a:active {
+        background: black;
+        color: white;
+        text-decoration: underline;
+      }
+
+      livery-player {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        object-fit: contain;
+      }
+
+      #error {
+        margin-top: 45vh;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="error" hidden>
+      Please specify an id, e.g:<br>
+      <a href="?id=5ddb98f5e4b0937e6a4507f2">https://iframe.liveryvideo.com?id=5ddb98f5e4b0937e6a4507f2</a>
+    </div>
+
+    <livery-sdk></livery-sdk>
+    <livery-player autoplaymuted persistmuted controls="error mute fullscreen" hidden></livery-player>
+
+    <script>
+      const error = document.getElementById('error');
+      const sdk = document.querySelector('livery-sdk');
+      const player = document.querySelector('livery-player');
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      const version = params.get('v') || '5.13.3';
+
+      if (id) {
+        sdk.config = `https://cdn.playtotv.com/video-encoder/remoteconfigs/${id}.json`;
+        
+        const script = document.createElement('script');
+        script.src = `https://unpkg.com/@exmg/livery@${version}`;
+        document.body.appendChild(script);
+
+        player.hidden = false;
+      } else {
+        error.hidden = false;
+      }
+    </script>
+  </body>
+</html>

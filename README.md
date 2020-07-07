@@ -1,2 +1,3 @@
 # livery-iframe
-Website for embedding a Livery player within another website.
+
+Website for embedding a Livery player within an iframe.
