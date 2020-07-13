@@ -58,7 +58,7 @@
     </div>
 
     <livery-sdk></livery-sdk>
-    <livery-player autoplaymuted persistmuted controls="error mute fullscreen" hidden></livery-player>
+    <livery-player autoplaymuted persistmuted hidden></livery-player>
 
     <script>
       const error = document.getElementById('error');
@@ -67,6 +67,9 @@
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
       const version = params.get('v') || '5.14.3';
+
+      const supportsFullscreen = !!(player.requestFullscreen || player.webkitRequestFullscreen)
+      player.controls = supportsFullscreen ? 'error mute fullscreen' : 'error mute';
 
       if (id) {
         sdk.config = `https://cdn.playtotv.com/video-encoder/remoteconfigs/${id}.json`;
