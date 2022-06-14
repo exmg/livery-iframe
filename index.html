@@ -60,9 +60,7 @@
       const error = document.getElementById('error');
       const params = new URLSearchParams(location.search);
       const id = params.get('id');
-      // override latest version for Greenlight test session 2022-06-06T00:00:00Z
-      const latest = (new Date() < new Date('2022-06-14T00:00:00Z')) ? '7.0.1' : 'latest'
-      const version = params.get('v') || latest;
+      const version = params.get('v') || 'latest';
 
       if (id) {
         const script = document.createElement('script');
