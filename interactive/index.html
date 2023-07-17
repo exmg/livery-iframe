@@ -8,11 +8,11 @@
     />
     <meta
       name="Description"
-      content="Website for embedding a Livery Video Player in an iframe."
+      content="Website for embedding a Livery Interactive element in an iframe."
     />
     <base href="/" />
 
-    <title>Embed Livery Video Player</title>
+    <title>Embed Livery Interactive</title>
 
     <style>
       * {
@@ -36,7 +36,7 @@
         text-decoration: underline;
       }
 
-      livery-player {
+      livery-interactive {
         position: absolute;
         top: 0;
         right: 0;
@@ -51,27 +51,38 @@
     </style>
   </head>
   <body>
-    <div id="error" hidden>
-      Please specify an id, e.g:<br>
-      <a href="?id=5ddb98f5e4b0937e6a4507f2">https://embed.liveryvideo.com?id=5ddb98f5e4b0937e6a4507f2</a>
-    </div>
+    <div id="error" hidden></div>
 
     <script>
       const error = document.getElementById('error');
       const params = new URLSearchParams(location.search);
-      const id = params.get('id');
-      const version = params.get('v') || 'latest';
+      const playerVersion = params.get('v') || 'latest';
+      const mockBridge = params.get('mockBridge');
+      const bridgeVersion = mockBridge || 'latest';
 
-      if (id) {
+      function loadPackage(name, version, onload) {
         const script = document.createElement('script');
-        script.src = `https://cdn.jsdelivr.net/npm/@liveryvideo/player@${version}`;
+        script.async = true;
+        script.src = `https://cdn.jsdelivr.net/npm/@liveryvideo/${name}@${version}`;
+        script.onerror = () => {
+          error.innerHTML += `Failed to load: ${script.src}<br/>`;
+          error.hidden = false;
+        }
+        script.onload = onload;
         document.body.appendChild(script);
+      }
 
-        const player = document.createElement('livery-player');
-        player.setAttribute('streamid', id);
-        document.body.appendChild(player);
+      loadPackage('interactive', playerVersion);
+
+      const interactive = document.createElement('livery-interactive');
+
+      if (mockBridge !== null) {
+        loadPackage('interactive-bridge', bridgeVersion, () => {
+          interactive.playerBridge = new livery.MockPlayerBridge();
+          document.body.appendChild(interactive);
+        });
       } else {
-        error.hidden = false;
+        document.body.appendChild(interactive);
       }
     </script>
   </body>
