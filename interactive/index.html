@@ -57,8 +57,9 @@
       const error = document.getElementById('error');
       const params = new URLSearchParams(location.search);
       const playerVersion = params.get('v') || 'latest';
-      const mockBridge = params.get('mockBridge');
-      const bridgeVersion = mockBridge || 'latest';
+      const mock = params.has('mock');
+      const test = params.has('test');
+      const bridgeVersion = params.get('bridge') || 'latest';
 
       function loadPackage(name, version, onload) {
         const script = document.createElement('script');
@@ -72,13 +73,20 @@
         document.body.appendChild(script);
       }
 
-      loadPackage('interactive', playerVersion);
-
       const interactive = document.createElement('livery-interactive');
 
-      if (mockBridge !== null) {
+      if (!test) {
+        loadPackage('interactive', playerVersion);
+      }
+
+      if (mock || test) {
         loadPackage('interactive-bridge', bridgeVersion, () => {
-          interactive.playerBridge = new livery.MockPlayerBridge();
+          if (mock) {
+            interactive.playerBridge = new livery.MockPlayerBridge();
+          }
+          if (test) {
+            customElements.define('livery-interactive', livery.LiveryInteractive);
+          }
           document.body.appendChild(interactive);
         });
       } else {
