@@ -36,7 +36,8 @@
         text-decoration: underline;
       }
 
-      livery-interactive {
+      livery-interactive,
+      livery-bridge-interactive {
         position: absolute;
         top: 0;
         right: 0;
@@ -73,7 +74,7 @@
         document.body.appendChild(script);
       }
 
-      const interactive = document.createElement('livery-interactive');
+      const interactive = document.createElement(test ? 'livery-bridge-interactive' : 'livery-interactive');
 
       if (!test) {
         loadPackage('interactive', playerVersion);
@@ -83,9 +84,6 @@
         loadPackage('interactive-bridge', bridgeVersion, () => {
           if (mock) {
             interactive.playerBridge = new livery.MockPlayerBridge();
-          }
-          if (test) {
-            customElements.define('livery-interactive', livery.LiveryInteractive);
           }
           document.body.appendChild(interactive);
         });
