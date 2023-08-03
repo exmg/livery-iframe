@@ -52,10 +52,12 @@
     <script>
       const error = document.getElementById('error');
       const params = new URLSearchParams(location.search);
-      const playerVersion = params.get('v') || 'latest';
+      const version = params.get('v') || 'latest';
       const mock = params.has('mock');
       const test = params.has('test');
       const bridgeVersion = params.get('bridge') || 'latest';
+      const region = params.get('region') || '';
+      const tenantId = params.get('tenantid') || '';
 
       function loadPackage(name, version, onload) {
         const script = document.createElement('script');
@@ -70,9 +72,11 @@
       }
 
       const interactive = document.createElement(test ? 'livery-bridge-interactive' : 'livery-interactive');
+      interactive.region = region;
+      interactive.tenantId = tenantId;
 
       if (!test) {
-        loadPackage('interactive', playerVersion);
+        loadPackage('interactive', version);
       }
 
       if (mock || test) {
